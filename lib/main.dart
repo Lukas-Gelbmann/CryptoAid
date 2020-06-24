@@ -9,20 +9,6 @@ import 'data.dart';
 
 void main() => runApp(MyApp());
 
-/*class Exchanges {
-  final List<Exchange> result;
-
-  Exchanges({this.result});
-
-  factory Exchanges.fromJson(Map<String, dynamic> json) => Exchanges(
-        result: List<Exchange>.from(json['result'].map(
-            (x) => Exchange.fromJson(jsonDecode(x)))), //Exchange.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() =>
-      {"result": List<dynamic>.from(result.map((x) => x.toJson()))};
-}*/
-
 class Exchange {
   final String exchange;
   final dynamic bestCaseFee;

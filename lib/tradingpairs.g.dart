@@ -26,34 +26,24 @@ Map<String, dynamic> _$TradingPairToJson(TradingPair instance) =>
 
 OrderBooks _$OrderBooksFromJson(Map<String, dynamic> json) {
   return OrderBooks(
-    orderBook: (json['orderBook'] as List)
-        ?.map((e) =>
-            e == null ? null : OrderBook.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    exchange: json['exchange'] as String,
+    orderBook: (json['orderBook'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(
+          k,
+          (e as List)
+              ?.map((e) => e == null
+                  ? null
+                  : TradingEntry.fromJson(e as Map<String, dynamic>))
+              ?.toList()),
+    ),
   );
 }
 
 Map<String, dynamic> _$OrderBooksToJson(OrderBooks instance) =>
     <String, dynamic>{
-      'orderBook': instance.orderBook?.map((e) => e?.toJson())?.toList(),
-    };
-
-OrderBook _$OrderBookFromJson(Map<String, dynamic> json) {
-  return OrderBook(
-    asks: (json['asks'] as List)
-        ?.map((e) =>
-            e == null ? null : TradingEntry.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    bids: (json['bids'] as List)
-        ?.map((e) =>
-            e == null ? null : TradingEntry.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-  );
-}
-
-Map<String, dynamic> _$OrderBookToJson(OrderBook instance) => <String, dynamic>{
-      'asks': instance.asks?.map((e) => e?.toJson())?.toList(),
-      'bids': instance.bids?.map((e) => e?.toJson())?.toList(),
+      'exchange': instance.exchange,
+      'orderBook': instance.orderBook
+          ?.map((k, e) => MapEntry(k, e?.map((e) => e?.toJson())?.toList())),
     };
 
 TradingEntry _$TradingEntryFromJson(Map<String, dynamic> json) {

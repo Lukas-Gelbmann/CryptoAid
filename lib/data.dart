@@ -64,7 +64,7 @@ class DataWidgetState extends State<DataWidget> {
               : Center(child: CircularProgressIndicator());
         },
       );
-    } else {
+    } else if (_selectedIndex == 1) {
       return FutureBuilder<List<TradingPair>>(
         future: fetchTradingPairs(http.Client(), exchange),
         builder: (context, snapshot) {
@@ -74,6 +74,8 @@ class DataWidgetState extends State<DataWidget> {
               : Center(child: CircularProgressIndicator());
         },
       );
+    } else {
+      return null;
     }
   }
 }

@@ -13,10 +13,10 @@ Future<List<TradingPair>> fetchTradingPairs(http.Client client,
     exchange) async {
   final response = await client
       .get('https://bachelorprojekt.com/' + exchange.exchange + "/orderbooks");
-  return compute(parseTickers, response.body);
+  return compute(parseTradingPairs, response.body);
 }
 
-List<TradingPair> parseTickers(String responseBody) {
+List<TradingPair> parseTradingPairs(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   return parsed.map<TradingPair>((json) => TradingPair.fromJson(json)).toList();
 }
@@ -38,27 +38,15 @@ class TradingPair {
 
 @JsonSerializable(explicitToJson: true)
 class OrderBooks {
-  final List<OrderBook> orderBook;
+  final String exchange;
+  final Map<String, List<TradingEntry>> orderBook;
 
-  OrderBooks({this.orderBook});
+  OrderBooks({this.exchange, this.orderBook});
 
   factory OrderBooks.fromJson(Map<String, dynamic> json) =>
       _$OrderBooksFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderBooksToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class OrderBook {
-  final List<TradingEntry> asks;
-  final List<TradingEntry> bids;
-
-  OrderBook({this.asks, this.bids});
-
-  factory OrderBook.fromJson(Map<String, dynamic> json) =>
-      _$OrderBookFromJson(json);
-
-  Map<String, dynamic> toJson() => _$OrderBookToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -100,11 +88,17 @@ class TradingPairListState extends State<TradingPairList> {
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider();
           i = i ~/ 2;
-          String tradingpair = tradingpairs[i].baseSymbol;
+          String tradingpair = tradingpairs[i].baseSymbol + "/" + tradingpairs[i].quoteSymbol;
+          String askprice = tradingpairs[i].orderBooks[0].orderBook["asks"].elementAt(0).price;
+          String bidprice = tradingpairs[i].orderBooks[0].orderBook["bids"].elementAt(0).price;
           return ListTile(
             title: Text(
               tradingpair,
             ),
+            trailing: Text(
+              askprice
+            ),
+            onTap: ,
           );
         });
   }
