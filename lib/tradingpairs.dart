@@ -1,4 +1,3 @@
-import 'data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parsejson/main.dart';
@@ -6,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
+import 'tradingdata.dart';
 
 part "tradingpairs.g.dart";
 
@@ -98,8 +98,16 @@ class TradingPairListState extends State<TradingPairList> {
             trailing: Text(
               askprice
             ),
-            onTap: ,
+            onTap: () => openDataView(context, i),
           );
         });
+  }
+
+  openDataView(context, i) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TradingDataWidget(exchange: exchange, tradingPair: tradingpairs[i],),
+        ));
   }
 }

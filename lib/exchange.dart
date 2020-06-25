@@ -1,28 +1,25 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parsejson/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:parsejson/tradingpairs.dart';
-import 'dart:async';
-import 'dart:convert';
 import 'ticker.dart';
 
-class DataWidget extends StatefulWidget {
+class ExchangeWidget extends StatefulWidget {
   final Exchange exchange;
 
-  DataWidget(this.exchange);
+  ExchangeWidget(this.exchange);
 
   @override
   State<StatefulWidget> createState() {
-    return DataWidgetState(exchange);
+    return ExchangeWidgetState(exchange);
   }
 }
 
-class DataWidgetState extends State<DataWidget> {
+class ExchangeWidgetState extends State<ExchangeWidget> {
   final Exchange exchange;
   int _selectedIndex = 0;
 
-  DataWidgetState(this.exchange);
+  ExchangeWidgetState(this.exchange);
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +34,13 @@ class DataWidgetState extends State<DataWidget> {
               icon: Icon(Icons.access_time),
             ),
             BottomNavigationBarItem(
-              title: Text("Trading Pairs"),
+              title: Text("Trading"),
               icon: Icon(Icons.history),
-            )
+            ),
+            BottomNavigationBarItem(
+              title: Text("Profile"),
+              icon: Icon(Icons.person),
+            ),
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
@@ -75,7 +76,7 @@ class DataWidgetState extends State<DataWidget> {
         },
       );
     } else {
-      return null;
+      return Center(child: Text("Profile..."),);
     }
   }
 }

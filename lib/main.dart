@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'data.dart';
+import 'exchange.dart';
 
 void main() => runApp(MyApp());
 
@@ -108,7 +108,7 @@ class ExchangeListState extends State<ExchangeList> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DataWidget(exchanges[i]),
+          builder: (context) => ExchangeWidget(exchanges[i]),
         ));
   }
 }
