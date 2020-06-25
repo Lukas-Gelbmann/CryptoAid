@@ -16,6 +16,9 @@ dev_dependencies:
   build_runner: ^1.10.0
   json_serializable: ^3.3.0
   flutter_candlesticks: 0.1.4
+  flutter_secure_storage: ^3.3.3
+  local_auth: ^0.6.2
+  get_it: ^1.0.3
 
 
 flutter:

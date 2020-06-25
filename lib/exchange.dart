@@ -3,7 +3,7 @@ import 'package:parsejson/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:parsejson/tradingpairs.dart';
 import 'ticker.dart';
-
+import 'profile.dart';
 class ExchangeWidget extends StatefulWidget {
   final Exchange exchange;
 
@@ -76,7 +76,7 @@ class ExchangeWidgetState extends State<ExchangeWidget> {
         },
       );
     } else {
-      return Center(child: Text("Profile..."),);
+      return Profile(exchange: exchange);
     }
   }
 }

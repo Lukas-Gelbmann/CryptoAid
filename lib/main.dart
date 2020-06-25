@@ -4,10 +4,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:local_auth/local_auth.dart';
 import 'exchange.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class Exchange {
   final String exchange;
@@ -35,7 +38,7 @@ class Exchange {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Crypto';
+    final appTitle = 'CryptoAid';
     return MaterialApp(
       title: appTitle,
       home: MyHomePage(title: appTitle),
@@ -80,6 +83,7 @@ class ExchangeList extends StatefulWidget {
 
 class ExchangeListState extends State<ExchangeList> {
   final List<Exchange> exchanges;
+  final LocalAuthentication _localAuthentication = LocalAuthentication();
 
   ExchangeListState({this.exchanges});
 
@@ -96,7 +100,7 @@ class ExchangeListState extends State<ExchangeList> {
               exchanges.elementAt(i).exchange.replaceFirst(
                   exchanges.elementAt(i).exchange[0],
                   exchanges.elementAt(i).exchange[0].toUpperCase()),
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(fontSize: 20),
             ), //pfusch
             trailing: Image.network(exchanges.elementAt(i).icon),
             onTap: () => openExchange(context, i),
@@ -104,12 +108,30 @@ class ExchangeListState extends State<ExchangeList> {
         });
   }
 
+  Future<void> _authorizeNow(context, i) async {
+    bool isAuthorized = false;
+    try {
+      isAuthorized = await _localAuthentication.authenticateWithBiometrics(
+        localizedReason: "Please authenticate to complete your transaction",
+        useErrorDialogs: true,
+        stickyAuth: true,
+      );
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    if (isAuthorized) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ExchangeWidget(exchanges[i]),
+          ));
+    }
+  }
+
   openExchange(context, int i) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ExchangeWidget(exchanges[i]),
-        ));
+    _authorizeNow(context, i);
   }
 }
 

@@ -145,6 +145,8 @@ class TradingDataViewState extends State<TradingDataView> {
           volumeProp: 0.2,
           enableGridLines: true,
           labelPrefix: tradingPair.quoteSymbol,
+          gridLineColor: Colors.black54,
+          gridLineLabelColor: Colors.black54,
         ),
       ),
       ButtonBar(
