@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:parsejson/tradingpairs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_candlesticks/flutter_candlesticks.dart';
 
 part 'tradingdata.g.dart';
 
@@ -32,7 +35,7 @@ class TradingDataWidgetState extends State<TradingDataWidget> {
     String pairString = tradingPair.quoteSymbol + "/" + tradingPair.baseSymbol;
     return Scaffold(
         appBar: AppBar(
-          title: Text("Trading View"),
+          title: Text(pairString),
         ),
         body: FutureBuilder<List<History>>(
           future:
@@ -68,11 +71,11 @@ class OHLCVData {
   final String high;
   final String low;
   final String close;
-  final String volume;
+  final double btcVolume;
   final String time;
 
   OHLCVData(
-      {this.open, this.high, this.low, this.close, this.volume, this.time});
+      {this.open, this.high, this.low, this.close, this.btcVolume, this.time});
 
   factory OHLCVData.fromJson(Map<String, dynamic> json) =>
       _$OHLCVDataFromJson(json);
@@ -93,7 +96,7 @@ Future<List<History>> fetchHistory(http.Client client, exchange,
 
 List<History> parseHistory(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  return parsed.map<TradingPair>((json) => TradingPair.fromJson(json)).toList();
+  return parsed.map<History>((json) => History.fromJson(json)).toList();
 }
 
 class TradingDataView extends StatefulWidget {
@@ -112,11 +115,71 @@ class TradingDataViewState extends State<TradingDataView> {
   final Exchange exchange;
   final List<History> history;
   final TradingPair tradingPair;
+  List data;
+  int entries;
 
-  TradingDataViewState({this.exchange, this.tradingPair, this.history});
+  TradingDataViewState(
+      {this.exchange, this.tradingPair, this.history, this.data}) {
+    final x = history[0].history;
+    data = new List();
+    for (int i = 0; i < x.length; i++) {
+      Map singleMap = Map<String, double>();
+      singleMap["open"] = double.parse(x[i].open);
+      singleMap["high"] = double.parse(x[i].high);
+      singleMap["low"] = double.parse(x[i].low);
+      singleMap["close"] = double.parse(x[i].close);
+      singleMap["volumeto"] = x[i].btcVolume;
+      data.add(singleMap);
+    }
+    entries = data.length;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text(history[0].history[0].open));
+    List visibleData = data.sublist(data.length-entries, data.length);
+    return ListView(children: <Widget>[
+      Container(
+        height: 500.0,
+        child: OHLCVGraph(
+          data: visibleData,
+          volumeProp: 0.2,
+          enableGridLines: true,
+          labelPrefix: tradingPair.quoteSymbol,
+        ),
+      ),
+      ButtonBar(
+        children: [
+          RaisedButton(
+            child: Text("All"),
+            onPressed: () => dataChange(0),
+          ),
+          RaisedButton(
+            child: Text("Year"),
+            onPressed: () => dataChange(1),
+          ),
+          RaisedButton(
+            child: Text("Month"),
+            onPressed: () => dataChange(2),
+          ),
+          RaisedButton(
+            child: Text("Week"),
+            onPressed: () => dataChange(3),
+          ),
+        ],
+      )
+    ]);
+    //Center(child: Text(history[0].history[0].open));
+  }
+
+  dataChange(int i) {
+    setState(() {
+      if (i == 0)
+        entries = data.length;
+      else if (i == 1 && data.length > 365)
+        entries = 365;
+      else if (i == 2 && data.length > 30)
+        entries = 30;
+      else if (i == 3 && data.length > 7) entries = 7;
+    });
   }
 }

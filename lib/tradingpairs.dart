@@ -91,12 +91,13 @@ class TradingPairListState extends State<TradingPairList> {
           String tradingpair = tradingpairs[i].baseSymbol + "/" + tradingpairs[i].quoteSymbol;
           String askprice = tradingpairs[i].orderBooks[0].orderBook["asks"].elementAt(0).price;
           String bidprice = tradingpairs[i].orderBooks[0].orderBook["bids"].elementAt(0).price;
+          String price = "1 " + tradingpairs[i].baseSymbol + " = " + askprice + " " +tradingpairs[i].quoteSymbol;
           return ListTile(
             title: Text(
               tradingpair,
             ),
             trailing: Text(
-              askprice
+              price
             ),
             onTap: () => openDataView(context, i),
           );

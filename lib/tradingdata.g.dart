@@ -25,7 +25,7 @@ OHLCVData _$OHLCVDataFromJson(Map<String, dynamic> json) {
     high: json['high'] as String,
     low: json['low'] as String,
     close: json['close'] as String,
-    volume: json['volume'] as String,
+    btcVolume: (json['btcVolume'] as num)?.toDouble(),
     time: json['time'] as String,
   );
 }
@@ -35,6 +35,6 @@ Map<String, dynamic> _$OHLCVDataToJson(OHLCVData instance) => <String, dynamic>{
       'high': instance.high,
       'low': instance.low,
       'close': instance.close,
-      'volume': instance.volume,
+      'btcVolume': instance.btcVolume,
       'time': instance.time,
     };
