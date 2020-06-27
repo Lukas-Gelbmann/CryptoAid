@@ -9,8 +9,8 @@ import 'tradingdata.dart';
 
 part "tradingpairs.g.dart";
 
-Future<List<TradingPair>> fetchTradingPairs(http.Client client,
-    exchange) async {
+Future<List<TradingPair>> fetchTradingPairs(
+    http.Client client, exchange) async {
   final response = await client
       .get('https://bachelorprojekt.com/' + exchange.exchange + "/orderbooks");
   return compute(parseTradingPairs, response.body);
@@ -27,8 +27,7 @@ class TradingPair {
   final String baseSymbol;
   final List<OrderBooks> orderBooks;
 
-  TradingPair(
-      {this.quoteSymbol, this.baseSymbol, this.orderBooks});
+  TradingPair({this.quoteSymbol, this.baseSymbol, this.orderBooks});
 
   factory TradingPair.fromJson(Map<String, dynamic> json) =>
       _$TradingPairFromJson(json);
@@ -71,44 +70,92 @@ class TradingPairList extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() =>
-      TradingPairListState(exchange: exchange, tradingpairs: tradingpairs);
+      TradingPairListState(exchange: exchange, tradingpairs: tradingpairs, visibleTradingpairs: tradingpairs);
 }
 
 class TradingPairListState extends State<TradingPairList> {
   final List<TradingPair> tradingpairs;
   final Exchange exchange;
+  List<TradingPair> visibleTradingpairs;
+  final TextEditingController editingController = TextEditingController();
 
-  TradingPairListState({this.exchange, this.tradingpairs});
+  TradingPairListState({this.exchange, this.tradingpairs, this.visibleTradingpairs});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        padding: EdgeInsets.all(16.0),
-        itemCount: tradingpairs.length * 2,
-        itemBuilder: (context, i) {
-          if (i.isOdd) return Divider();
-          i = i ~/ 2;
-          String tradingpair = tradingpairs[i].baseSymbol + "/" + tradingpairs[i].quoteSymbol;
-          String askprice = tradingpairs[i].orderBooks[0].orderBook["asks"].elementAt(0).price;
-          String bidprice = tradingpairs[i].orderBooks[0].orderBook["bids"].elementAt(0).price;
-          String price = "1 " + tradingpairs[i].baseSymbol + " = " + askprice + " " +tradingpairs[i].quoteSymbol;
-          return ListTile(
-            title: Text(
-              tradingpair,
-            ),
-            trailing: Text(
-              price
-            ),
-            onTap: () => openDataView(context, i),
-          );
-        });
+    return Container(
+        child: Column(children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          onChanged: (value) {
+            searchChanged(value);
+          },
+          controller: editingController,
+          decoration: InputDecoration(
+              labelText: "Search",
+              hintText: "Search",
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+        ),
+      ),
+      Expanded(
+          child: ListView.builder(
+              padding: EdgeInsets.all(16.0),
+              itemCount: visibleTradingpairs.length * 2,
+              itemBuilder: (context, i) {
+                if (i.isOdd) return Divider();
+                i = i ~/ 2;
+                String tradingpair = visibleTradingpairs[i].baseSymbol +
+                    "/" +
+                    visibleTradingpairs[i].quoteSymbol;
+                String askprice = visibleTradingpairs[i]
+                    .orderBooks[0]
+                    .orderBook["asks"]
+                    .elementAt(0)
+                    .price;
+                String bidprice = visibleTradingpairs[i]
+                    .orderBooks[0]
+                    .orderBook["bids"]
+                    .elementAt(0)
+                    .price;
+                String price = "1 " +
+                    visibleTradingpairs[i].baseSymbol +
+                    " = " +
+                    askprice +
+                    " " +
+                    visibleTradingpairs[i].quoteSymbol;
+                return ListTile(
+                  title: Text(
+                    tradingpair,
+                  ),
+                  trailing: Text(price),
+                  onTap: () => openDataView(context, i),
+                );
+              }))
+    ]));
   }
 
   openDataView(context, i) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TradingDataWidget(exchange: exchange, tradingPair: tradingpairs[i],),
+          builder: (context) => TradingDataWidget(
+            exchange: exchange,
+            tradingPair: tradingpairs[i],
+          ),
         ));
+  }
+
+  void searchChanged(String value) {
+    setState(() {
+      visibleTradingpairs = List<TradingPair>();
+      for (TradingPair tp in tradingpairs) {
+        String tradingpair = tp.baseSymbol + "/" + tp.quoteSymbol;
+        if (tradingpair.toLowerCase().contains(value.toLowerCase()))
+          visibleTradingpairs.add(tp);
+      }
+    });
   }
 }

@@ -24,15 +24,15 @@ class Ticker {
   final dynamic percentChange24h;
   final String lastUpdated;
 
-  Ticker(
-      {this.name,
-      this.symbol,
-      this.priceUSD,
-      this.priceBTC,
-      this.percentChange24h,
-      this.lastUpdated});
+  Ticker({this.name,
+    this.symbol,
+    this.priceUSD,
+    this.priceBTC,
+    this.percentChange24h,
+    this.lastUpdated});
 
-  factory Ticker.fromJson(Map<String, dynamic> json) => Ticker(
+  factory Ticker.fromJson(Map<String, dynamic> json) =>
+      Ticker(
         name: json['name'] as String,
         symbol: json['symbol'] as String,
         priceUSD: json['priceUsd'] as String,
@@ -41,7 +41,8 @@ class Ticker {
         lastUpdated: json['lastUpdated'] as String,
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "name": name,
         "symbol": symbol,
         "priceUsd": priceUSD,
@@ -59,48 +60,82 @@ class TickerList extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() =>
-      TickerListState(exchange: exchange, tickers: tickers);
+      TickerListState(
+          exchange: exchange, tickers: tickers, visibleTickers: tickers);
 }
 
 class TickerListState extends State<TickerList> {
   final List<Ticker> tickers;
   final Exchange exchange;
+  List<Ticker> visibleTickers;
+  final TextEditingController editingController = TextEditingController();
 
-  TickerListState({this.exchange, this.tickers});
+  TickerListState({this.exchange, this.tickers, this.visibleTickers});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        padding: EdgeInsets.all(16.0),
-        itemCount: tickers.length * 2,
-        itemBuilder: (context, i) {
-          if (i.isOdd) return Divider();
-          i = i ~/ 2;
-          String price = tickers[i].priceUSD + " USD  ";
-          if (tickers[i].priceUSD.length > 6)
-            price = tickers[i].priceUSD.substring(0, 5) + " USD  ";
-          String name = tickers[i].name;
-          String change = tickers[i].percentChange24h + " %";
-          if (tickers[i].percentChange24h.length > 6)
-            change = tickers[i].percentChange24h.substring(0, 5) + " %";
-          Color color = Colors.green;
-          if (change[0] == "-") {
-            color = Colors.red;
-          }
-          return ListTile(
-            trailing: Text(
-              change,
-              style: TextStyle(color: color),
+    return Container(
+        child: Column(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (value) {
+                searchChanged(value);
+              },
+              controller: editingController,
+              decoration: InputDecoration(
+                  labelText: "Search",
+                  hintText: "Search",
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)))),
             ),
-            leading: Text(
-              name,
-              style: TextStyle(fontSize: 20.0),
-            ),
-            title: Text(
-              price,
-              textAlign: TextAlign.right,
-            ),
-          );
-        });
+          ),
+          Expanded(
+              child: ListView.builder(
+                  padding: EdgeInsets.all(16.0),
+                  itemCount: visibleTickers.length * 2,
+                  itemBuilder: (context, i) {
+                    if (i.isOdd) return Divider();
+                    i = i ~/ 2;
+                    String price = visibleTickers[i].priceUSD + " USD  ";
+                    if (visibleTickers[i].priceUSD.length > 6)
+                      price =
+                          visibleTickers[i].priceUSD.substring(0, 5) + " USD  ";
+                    String name = visibleTickers[i].name;
+                    String change = visibleTickers[i].percentChange24h + " %";
+                    if (visibleTickers[i].percentChange24h.length > 6)
+                      change =
+                          visibleTickers[i].percentChange24h.substring(0, 5) +
+                              " %";
+                    Color color = Colors.green;
+                    if (change[0] == "-") {
+                      color = Colors.red;
+                    }
+                    return ListTile(
+                      trailing: Text(
+                        change,
+                        style: TextStyle(color: color),
+                      ),
+                      leading: Text(
+                        name,
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      title: Text(
+                        price,
+                        textAlign: TextAlign.right,
+                      ),
+                    );
+                  }))
+        ]
+        ));
+  }
+
+  searchChanged(String value) {
+    setState(() {
+      visibleTickers = List<Ticker>();
+      for (Ticker ticker in tickers)
+        if (ticker.name.toLowerCase().contains(value.toLowerCase())) visibleTickers.add(ticker);
+    });
   }
 }
