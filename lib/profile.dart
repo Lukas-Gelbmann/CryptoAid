@@ -72,7 +72,7 @@ class ProfileState extends State<Profile> {
           title: Text(exchangeKey.private),
         ),
         RaisedButton(
-          child: Text("Change"),
+          child: Text("Edit"),
           onPressed: () => change(),
         ),
         RaisedButton(
@@ -135,7 +135,7 @@ class _EditItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Edit item'),
+      title: Text('Edit'),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
