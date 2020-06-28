@@ -143,7 +143,7 @@ class TradingPairListState extends State<TradingPairList> {
         MaterialPageRoute(
           builder: (context) => TradingDataWidget(
             exchange: exchange,
-            tradingPair: tradingpairs[i],
+            tradingPair: visibleTradingpairs[i],
           ),
         ));
   }

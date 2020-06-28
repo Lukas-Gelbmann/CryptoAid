@@ -32,7 +32,7 @@ class TradingDataWidgetState extends State<TradingDataWidget> {
 
   @override
   Widget build(BuildContext context) {
-    String pairString = tradingPair.quoteSymbol + "/" + tradingPair.baseSymbol;
+    String pairString = tradingPair.baseSymbol + "/" + tradingPair.quoteSymbol;
     return Scaffold(
         appBar: AppBar(
           title: Text(pairString),
@@ -120,6 +120,8 @@ class TradingDataViewState extends State<TradingDataView> {
 
   TradingDataViewState(
       {this.exchange, this.tradingPair, this.history, this.data}) {
+    if(history.isEmpty)
+      return;
     final x = history[0].history;
     data = new List();
     for (int i = 0; i < x.length; i++) {
@@ -136,6 +138,8 @@ class TradingDataViewState extends State<TradingDataView> {
 
   @override
   Widget build(BuildContext context) {
+    if(history.isEmpty)
+      return Center(child: Text("Data not found"),);
     List visibleData = data.sublist(data.length-entries, data.length);
     return ListView(children: <Widget>[
       Container(
@@ -153,18 +157,22 @@ class TradingDataViewState extends State<TradingDataView> {
         children: [
           RaisedButton(
             child: Text("All"),
+            color: Colors.black12,
             onPressed: () => dataChange(0),
           ),
           RaisedButton(
             child: Text("Year"),
+            color: Colors.black12,
             onPressed: () => dataChange(1),
           ),
           RaisedButton(
             child: Text("Month"),
+            color: Colors.black12,
             onPressed: () => dataChange(2),
           ),
           RaisedButton(
             child: Text("Week"),
+            color: Colors.black12,
             onPressed: () => dataChange(3),
           ),
         ],

@@ -39,10 +39,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTitle = 'CryptoAid';
-    return MaterialApp(
-      title: appTitle,
-      home: MyHomePage(title: appTitle),
-    );
+      return MaterialApp(
+        title: appTitle,
+        theme: ThemeData.dark(),
+        home: MyHomePage(title: appTitle),
+      );
+
   }
 }
 

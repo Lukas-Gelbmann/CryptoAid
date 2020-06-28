@@ -24,15 +24,15 @@ class Ticker {
   final dynamic percentChange24h;
   final String lastUpdated;
 
-  Ticker({this.name,
-    this.symbol,
-    this.priceUSD,
-    this.priceBTC,
-    this.percentChange24h,
-    this.lastUpdated});
+  Ticker(
+      {this.name,
+      this.symbol,
+      this.priceUSD,
+      this.priceBTC,
+      this.percentChange24h,
+      this.lastUpdated});
 
-  factory Ticker.fromJson(Map<String, dynamic> json) =>
-      Ticker(
+  factory Ticker.fromJson(Map<String, dynamic> json) => Ticker(
         name: json['name'] as String,
         symbol: json['symbol'] as String,
         priceUSD: json['priceUsd'] as String,
@@ -41,8 +41,7 @@ class Ticker {
         lastUpdated: json['lastUpdated'] as String,
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "name": name,
         "symbol": symbol,
         "priceUsd": priceUSD,
@@ -59,9 +58,8 @@ class TickerList extends StatefulWidget {
   TickerList({Key key, this.exchange, this.tickers}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      TickerListState(
-          exchange: exchange, tickers: tickers, visibleTickers: tickers);
+  State<StatefulWidget> createState() => TickerListState(
+      exchange: exchange, tickers: tickers, visibleTickers: tickers);
 }
 
 class TickerListState extends State<TickerList> {
@@ -76,66 +74,68 @@ class TickerListState extends State<TickerList> {
   Widget build(BuildContext context) {
     return Container(
         child: Column(children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: (value) {
-                searchChanged(value);
-              },
-              controller: editingController,
-              decoration: InputDecoration(
-                  labelText: "Search",
-                  hintText: "Search",
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)))),
-            ),
-          ),
-          Expanded(
-              child: ListView.builder(
-                  padding: EdgeInsets.all(16.0),
-                  itemCount: visibleTickers.length * 2,
-                  itemBuilder: (context, i) {
-                    if (i.isOdd) return Divider();
-                    i = i ~/ 2;
-                    String price = visibleTickers[i].priceUSD + " USD  ";
-                    if (visibleTickers[i].priceUSD.length > 6)
-                      price =
-                          visibleTickers[i].priceUSD.substring(0, 5) + " USD  ";
-                    String name = visibleTickers[i].name;
-                    String change = visibleTickers[i].percentChange24h + " %";
-                    if (visibleTickers[i].percentChange24h.length > 6)
-                      change =
-                          visibleTickers[i].percentChange24h.substring(0, 5) +
-                              " %";
-                    Color color = Colors.green;
-                    if (change[0] == "-") {
-                      color = Colors.red;
-                    }
-                    return ListTile(
-                      trailing: Text(
-                        change,
-                        style: TextStyle(color: color),
-                      ),
-                      leading: Text(
-                        name,
-                        style: TextStyle(fontSize: 20.0),
-                      ),
-                      title: Text(
-                        price,
-                        textAlign: TextAlign.right,
-                      ),
-                    );
-                  }))
-        ]
-        ));
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          onChanged: (value) {
+            searchChanged(value);
+          },
+          controller: editingController,
+          decoration: InputDecoration(
+              labelText: "Search",
+              hintText: "Search",
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+        ),
+      ),
+      Expanded(
+          child: ListView.builder(
+              padding: EdgeInsets.all(16.0),
+              itemCount: visibleTickers.length * 2,
+              itemBuilder: (context, i) {
+                if (i.isOdd) return Divider();
+                i = i ~/ 2;
+                String price = visibleTickers[i].priceUSD + " USD  ";
+                if (visibleTickers[i].priceUSD.length > 7)
+                  price = visibleTickers[i].priceUSD.substring(0, 6) + " USD  ";
+                if (price[price.length-1].contains("."))
+                  price = price.substring(0, price.length-2);
+                String name =
+                    visibleTickers[i].symbol + "\n" + visibleTickers[i].name;
+                String change = visibleTickers[i].percentChange24h + " %";
+                if (visibleTickers[i].percentChange24h.length > 7)
+                  change =
+                      visibleTickers[i].percentChange24h.substring(0, 6) + " %";
+                Color color = Colors.green;
+                if (change[0] == "-") {
+                  color = Colors.red;
+                }
+                return ListTile(
+                  trailing: Text(
+                    change,
+                    style: TextStyle(color: color),
+                  ),
+                  leading: Text(
+                    name,
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  title: Text(
+                    price,
+                    textAlign: TextAlign.right,
+                  ),
+                );
+              }))
+    ]));
   }
 
   searchChanged(String value) {
     setState(() {
       visibleTickers = List<Ticker>();
       for (Ticker ticker in tickers)
-        if (ticker.name.toLowerCase().contains(value.toLowerCase())) visibleTickers.add(ticker);
+        if (ticker.name.toLowerCase().contains(value.toLowerCase()) ||
+            ticker.symbol.toLowerCase().contains(value.toLowerCase()))
+          visibleTickers.add(ticker);
     });
   }
 }

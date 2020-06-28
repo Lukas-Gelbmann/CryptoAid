@@ -71,14 +71,19 @@ class ProfileState extends State<Profile> {
         ListTile(
           title: Text(exchangeKey.private),
         ),
-        RaisedButton(
-          child: Text("Edit"),
-          onPressed: () => change(),
-        ),
-        RaisedButton(
-          child: Text("Scan QRCode"),
-          onPressed: () => scan(),
-        )
+        ButtonBar(children: <Widget>[
+          RaisedButton(
+            child: Text("Edit"),
+            color: Colors.black12,
+            onPressed: () => change(),
+          ),
+          RaisedButton(
+            child: Text("Scan QRCode"),
+            color: Colors.black12,
+            onPressed: () => scan(),
+          )
+        ],),
+
       ],
     );
   }
