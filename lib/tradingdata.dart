@@ -143,6 +143,7 @@ class TradingDataViewState extends State<TradingDataView> {
     List visibleData = data.sublist(data.length-entries, data.length);
     return ListView(children: <Widget>[
       Container(
+        padding: EdgeInsets.only(top: 15, right: 15, left: 5),
         height: 500.0,
         child: OHLCVGraph(
           data: visibleData,

@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
     final appTitle = 'CryptoAid';
       return MaterialApp(
         title: appTitle,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData.dark(),
         home: MyHomePage(title: appTitle),
       );
