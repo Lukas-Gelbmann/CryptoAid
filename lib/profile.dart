@@ -58,32 +58,44 @@ class ProfileState extends State<Profile> {
     if (exchangeKey == null) return Center(child: CircularProgressIndicator());
     return ListView(
       children: <Widget>[
-        ListTile(
-          title: Text("Public"),
-        ),
-        ListTile(
-          title: Text(exchangeKey.public),
-        ),
-        Divider(),
-        ListTile(
-          title: Text("Private"),
-        ),
-        ListTile(
-          title: Text(exchangeKey.private),
-        ),
-        ButtonBar(children: <Widget>[
-          RaisedButton(
-            child: Text("Edit"),
-            color: Colors.black12,
-            onPressed: () => change(),
+        Card(
+          child: ListTile(
+            title: Text(
+              "Public",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(exchangeKey.public, style: TextStyle(fontSize: 18)),
           ),
-          RaisedButton(
-            child: Text("Scan QRCode"),
-            color: Colors.black12,
-            onPressed: () => scan(),
-          )
-        ],),
-
+        ),
+        Card(
+          child: ListTile(
+            title: Text(
+              "Private",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(exchangeKey.private, style: TextStyle(fontSize: 18)),
+          ),
+        ),
+        ButtonBar(
+          children: <Widget>[
+            RaisedButton(
+              child: Text("Edit",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              color: Colors.black26,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  side: BorderSide(color: Colors.grey)),
+              onPressed: () => change(),
+            ),
+            RaisedButton(
+              child: Text("Scan QRCode",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              color: Colors.black26,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  side: BorderSide(color: Colors.grey)),
+              onPressed: () => scan(),
+            )
+          ],
+        ),
       ],
     );
   }

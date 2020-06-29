@@ -133,7 +133,7 @@ class TradingDataViewState extends State<TradingDataView> {
       singleMap["volumeto"] = x[i].btcVolume;
       data.add(singleMap);
     }
-    entries = data.length;
+    entries = 30;
   }
 
   @override
@@ -149,30 +149,42 @@ class TradingDataViewState extends State<TradingDataView> {
           volumeProp: 0.2,
           enableGridLines: true,
           labelPrefix: tradingPair.quoteSymbol,
-          gridLineColor: Colors.black54,
-          gridLineLabelColor: Colors.black54,
+          gridLineColor: Colors.white30,
+          gridLineLabelColor: Colors.white30,
         ),
       ),
       ButtonBar(
         children: [
           RaisedButton(
-            child: Text("All"),
+            child: Text("All",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             color: Colors.black12,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.grey)),
             onPressed: () => dataChange(0),
           ),
           RaisedButton(
-            child: Text("Year"),
+            child: Text("Year",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             color: Colors.black12,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.grey)),
             onPressed: () => dataChange(1),
           ),
           RaisedButton(
-            child: Text("Month"),
+            child: Text("Month",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             color: Colors.black12,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.grey)),
             onPressed: () => dataChange(2),
           ),
           RaisedButton(
-            child: Text("Week"),
+            child: Text("Week",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             color: Colors.black12,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.grey)),
             onPressed: () => dataChange(3),
           ),
         ],

@@ -69,8 +69,10 @@ class TradingPairList extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() =>
-      TradingPairListState(exchange: exchange, tradingpairs: tradingpairs, visibleTradingpairs: tradingpairs);
+  State<StatefulWidget> createState() => TradingPairListState(
+      exchange: exchange,
+      tradingpairs: tradingpairs,
+      visibleTradingpairs: tradingpairs);
 }
 
 class TradingPairListState extends State<TradingPairList> {
@@ -79,14 +81,14 @@ class TradingPairListState extends State<TradingPairList> {
   List<TradingPair> visibleTradingpairs;
   final TextEditingController editingController = TextEditingController();
 
-  TradingPairListState({this.exchange, this.tradingpairs, this.visibleTradingpairs});
+  TradingPairListState(
+      {this.exchange, this.tradingpairs, this.visibleTradingpairs});
 
   @override
   Widget build(BuildContext context) {
     return Container(
         child: Column(children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.all(8.0),
+      Card(
         child: TextField(
           onChanged: (value) {
             searchChanged(value);
@@ -95,18 +97,18 @@ class TradingPairListState extends State<TradingPairList> {
           decoration: InputDecoration(
               labelText: "Search",
               hintText: "Search",
+              labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              hintStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)))),
         ),
       ),
       Expanded(
           child: ListView.builder(
-              padding: EdgeInsets.all(16.0),
-              itemCount: visibleTradingpairs.length * 2,
+              padding: EdgeInsets.all(6.0),
+              itemCount: visibleTradingpairs.length,
               itemBuilder: (context, i) {
-                if (i.isOdd) return Divider();
-                i = i ~/ 2;
                 String tradingpair = visibleTradingpairs[i].baseSymbol +
                     "/" +
                     visibleTradingpairs[i].quoteSymbol;
@@ -126,13 +128,15 @@ class TradingPairListState extends State<TradingPairList> {
                     askprice +
                     " " +
                     visibleTradingpairs[i].quoteSymbol;
-                return ListTile(
+                return Card(
+                    child: ListTile(
                   title: Text(
                     tradingpair,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   trailing: Text(price),
                   onTap: () => openDataView(context, i),
-                );
+                ));
               }))
     ]));
   }

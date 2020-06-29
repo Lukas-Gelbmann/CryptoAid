@@ -74,8 +74,7 @@ class TickerListState extends State<TickerList> {
   Widget build(BuildContext context) {
     return Container(
         child: Column(children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.all(8.0),
+      Card(
         child: TextField(
           onChanged: (value) {
             searchChanged(value);
@@ -84,23 +83,24 @@ class TickerListState extends State<TickerList> {
           decoration: InputDecoration(
               labelText: "Search",
               hintText: "Search",
+              labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              hintStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)))),
         ),
+
       ),
       Expanded(
           child: ListView.builder(
-              padding: EdgeInsets.all(16.0),
-              itemCount: visibleTickers.length * 2,
+              padding: EdgeInsets.all(6.0),
+              itemCount: visibleTickers.length,
               itemBuilder: (context, i) {
-                if (i.isOdd) return Divider();
-                i = i ~/ 2;
                 String price = visibleTickers[i].priceUSD + " USD  ";
                 if (visibleTickers[i].priceUSD.length > 7)
                   price = visibleTickers[i].priceUSD.substring(0, 6) + " USD  ";
-                if (price[price.length-1].contains("."))
-                  price = price.substring(0, price.length-2);
+                if (price[price.length - 1].contains("."))
+                  price = price.substring(0, price.length - 2);
                 String name =
                     visibleTickers[i].symbol + "\n" + visibleTickers[i].name;
                 String change = visibleTickers[i].percentChange24h + " %";
@@ -111,20 +111,21 @@ class TickerListState extends State<TickerList> {
                 if (change[0] == "-") {
                   color = Colors.red;
                 }
-                return ListTile(
+                return Card(
+                    child: ListTile(
                   trailing: Text(
                     change,
                     style: TextStyle(color: color),
                   ),
                   leading: Text(
                     name,
-                    style: TextStyle(fontSize: 20.0),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   title: Text(
                     price,
                     textAlign: TextAlign.right,
                   ),
-                );
+                ));
               }))
     ]));
   }

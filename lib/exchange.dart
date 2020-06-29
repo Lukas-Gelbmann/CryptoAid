@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:parsejson/tradingpairs.dart';
 import 'ticker.dart';
 import 'profile.dart';
+
 class ExchangeWidget extends StatefulWidget {
   final Exchange exchange;
 
@@ -25,20 +26,24 @@ class ExchangeWidgetState extends State<ExchangeWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(exchange.exchange.toUpperCase()),
+          centerTitle: true,
+          title:  Text(
+            exchange.exchange.toUpperCase(),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              title: Text("USD Ticker Prices"),
+              title: Text("USD Ticker Prices", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               icon: Icon(Icons.access_time),
             ),
             BottomNavigationBarItem(
-              title: Text("Trading"),
+              title: Text("Trading", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               icon: Icon(Icons.history),
             ),
             BottomNavigationBarItem(
-              title: Text("Profile"),
+              title: Text("Profile", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               icon: Icon(Icons.person),
             ),
           ],

@@ -57,8 +57,10 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
-      ),
+        centerTitle: true,
+        title:  Text(title,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        ),
       body: FutureBuilder<List<Exchange>>(
         future: fetchExchanges(http.Client()),
         builder: (context, snapshot) {
@@ -92,21 +94,20 @@ class ExchangeListState extends State<ExchangeList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        padding: EdgeInsets.all(16.0),
-        itemCount: exchanges.length * 2,
+        padding: EdgeInsets.all(6.0),
+        itemCount: exchanges.length ,
         itemBuilder: (context, i) {
-          if (i.isOdd) return Divider();
-          i = i ~/ 2;
-          return ListTile(
+
+          return Card(child: ListTile(
             title: Text(
               exchanges.elementAt(i).exchange.replaceFirst(
                   exchanges.elementAt(i).exchange[0],
                   exchanges.elementAt(i).exchange[0].toUpperCase()),
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ), //pfusch
-            trailing: Image.network(exchanges.elementAt(i).icon),
+            leading: Image.network(exchanges.elementAt(i).icon),
             onTap: () => openExchange(context, i),
-          );
+          ));
         });
   }
 
